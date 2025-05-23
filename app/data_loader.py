@@ -8,7 +8,13 @@ logger = logging.getLogger(__name__)
 def load_stock_data() -> Dict[str, Dict[str, Any]]:
     """Load stock data from Excel file and return as dictionary."""
     try:
+        # Use absolute path to ensure the file is found
         data_path = Path(__file__).parent.parent / "data" / "merged_stock_data.xlsx"
+        logger.info(f"Loading data from: {data_path}")
+        
+        if not data_path.exists():
+            raise FileNotFoundError(f"Data file not found at {data_path}")
+            
         df = pd.read_excel(data_path)
         
         # Check for duplicate symbols
@@ -31,3 +37,6 @@ def load_stock_data() -> Dict[str, Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error loading stock data: {str(e)}")
         raise
+
+# Initialize the stock data
+stock_data = load_stock_data()
